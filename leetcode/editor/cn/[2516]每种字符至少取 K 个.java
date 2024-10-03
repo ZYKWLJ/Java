@@ -30,19 +30,22 @@ class Solution {
 
         //只能是从n-k开始逐渐减小！全部要最多包含这么多个数字！
         int finalLen=0;
+        boolean f=false;
         for (int len =n-3*k; len >0; len--) {
             int l=0;
             int r=len-1;
             while (r<n){
                 if (AllContain_ABC(l,r,s,k)){
                     finalLen=r-l+1;
+                    f=true;
                     break;
                 }
                 l++;
                 r++;
             }
+            if (f)break;
         }
-        return finalLen;
+        return n-finalLen;
     }
 
         private boolean AllContain_ABC(int l, int r, String s,int k) {
