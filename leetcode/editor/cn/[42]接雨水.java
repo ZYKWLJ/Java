@@ -1,7 +1,6 @@
 package editor.cn;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Stack;
 
 class Solution42 {
     public static void main(String[] args) {
@@ -16,13 +15,31 @@ class Solution42 {
             //    return point2(height);
 
             //    单调栈
-            //return indexStack(height);
+            return indexStack(height);
 
             //    dp
-                return dp(height);
+            //    return dp(height);
 
             //    前后缀分离
             //return preSuf(height);
+        }
+
+        private int indexStack(int[] height) {
+           int ans=0;
+            Stack<Integer> st = new Stack<>();
+            for (int right = 0; right < height.length; right++) {
+               while (!st.isEmpty()&&height[st.peek()]<height[right]){
+                   int aoCao=height[st.pop()];//凹槽的高度
+                   if (st.isEmpty())break;
+                   int left=st.peek();//找前面的围栏，构成坑
+                   int dh=Math.min(height[left],height[right])-aoCao; //木桶效用,高度求出来了
+                   ans+=dh*(right-left-1)*1;
+               }
+               st.push(right);
+            }
+
+            return ans;
+
         }
 
 
@@ -78,24 +95,24 @@ class Solution42 {
 
         //单调栈法，凹槽法，构建凹槽并填坑
         //找凹槽，右边第一个最大，左边第一个最大，取较小值，最后乘以宽度即可！
-        private int indexStack(int[] height) {
-            int ans = 0;
-            Deque<Integer> st = new ArrayDeque<>();
-            for (int right = 0; right < height.length; right++) {//这里使用right更加贴切题意
-                while (!st.isEmpty() && height[right] >= height[st.peek()]) {//碰见右边第一个大的了，就在前面去找左边的值。
-                    int aoCao = height[st.pop()];
-                    if (st.isEmpty()) {
-                        break;
-                    }
-                    int left = st.peek();
-                    int dh = Math.min(height[left], height[right]) - aoCao;
-                    // 面积的高(防止溢出，所以是较短的最大值减去凹槽值，因为是从左边遍历过来的，所以就算两者的较低值，也比凹槽值低)
-                    ans += dh * (right - left - 1);//宽*高=面积
-                }
-                st.push(right);
-            }
-            return ans;
-        }
+        //private int indexStack(int[] height) {
+        //    int ans = 0;
+        //    Deque<Integer> st = new ArrayDeque<>();
+        //    for (int right = 0; right < height.length; right++) {//这里使用right更加贴切题意
+        //        while (!st.isEmpty() && height[right] >= height[st.peek()]) {//碰见右边第一个大的了，就在前面去找左边的值。
+        //            int aoCao = height[st.pop()];
+        //            if (st.isEmpty()) {
+        //                break;
+        //            }
+        //            int left = st.peek();
+        //            int dh = Math.min(height[left], height[right]) - aoCao;
+        //            // 面积的高(防止溢出，所以是较短的最大值减去凹槽值，因为是从左边遍历过来的，所以就算两者的较低值，也比凹槽值低)
+        //            ans += dh * (right - left - 1);//宽*高=面积
+        //        }
+        //        st.push(right);
+        //    }
+        //    return ans;
+        //}
 
 
         //这是我见过最美的算法代码(迄今为止！！)没有之一
@@ -110,6 +127,8 @@ class Solution42 {
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
+
+
 
 }
 
